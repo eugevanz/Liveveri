@@ -124,6 +124,18 @@
             </v-card-text>
           </v-card>
         </v-container>
+
+        <v-dialog id="errorModal" v-model="errorModal" max-width="290">
+          <v-card>
+            <v-card-title id="exampleModalLongTitle" class="headline">Uh Oh, something went wrong</v-card-title>
+            <v-card-text id="errorMessageText">Unfortunately an error has occurred</v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="errorModal = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-main>
 
       <!-- <v-footer padless>
@@ -141,7 +153,12 @@
 import Vue from 'vue';
 
 export default {
-  props: ['guid'],
+  props: {
+    guid: {
+      type: String,
+      required: true
+    }
+  },
   data: () => ({
     idRules: [
       v => !!v || 'ID Number is required',
@@ -150,6 +167,7 @@ export default {
     ],
     progress: 25,
     valid: 'jhgvghhjsknflfvbhj',
+    errorModal: false
   }),
   methods: {
     ConsentYes: () => Vue.ConsentYes(),
@@ -159,13 +177,11 @@ export default {
     doneThirdParty: () => Vue.doneThirdParty(),
 
     checkGuid: () => {
-      console.log("check if guid is valid");
+      this.guid == this.valid ? true : false;
     }
   }, 
   mounted: {
-    checkGuid(
-      if (this.guid == this.valid) { return true; };
-    )
+    checkGuid();
   }
 };
 </script>
