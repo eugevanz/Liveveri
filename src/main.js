@@ -1,8 +1,14 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from './Liveness.vue'
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 
+import LivenessVerification from './plugins/scripts/livenessverification';
+
+Vue.use(LivenessVerification);
+
 new Vue({
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')

@@ -1,0 +1,299 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- reference your copy Font Awesome here (from our CDN or by hosting yourself) -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>VisionVerify.ai</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            overflow-x:hidden;
+        }
+        #jeeFaceFilterCanvas {
+            transform: rotateY(180deg);
+        }
+        .h-10 {
+            height: 10% !important;
+        }
+        .h-65 {
+            height: 65% !important;
+        }
+        .w-10 {
+            width: 10% !important;
+        }
+        #loadingOverlay {
+            display:none;
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.7);
+            z-index: 9999;
+        }
+        #spinner {
+            display: block;
+            position: absolute;
+            left: 48%;
+            top: 40%;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="container-fluid h-100 p-0">
+        <div class="row justify-content-center h-100">
+            <div class="col h-100">
+                <div class="row h-25 align-items-start" id="topRow">
+                    <div class="col">
+                        <div class="row d-none d-sm-block h-100 p-1 bg-light">
+                            <div class="col">
+                                <img class="img-fluid w-10 float-right" id="squareLogo" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/II_Square_Logo_640.png" />
+                                <h1 class="display-4">VisionVerify.ai</h1>
+                                <p class="lead">We need to verify your identity</p>
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="row d-block d-sm-none">
+                            <div class="col">
+                                <img class="img-fluid position-absolute w-25" id="squareLogo" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/II_Square_Logo_640.png" />
+                                <img class="img-fluid" alt="Responsive image" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/TopChrome.png" />
+                            </div>
+                        </div>
+                        <div class="row  d-block  d-sm-none">
+                            <div class="col text-center align-self-end">
+                                <h1 class="display-4" style="font-size:2.5rem">Hello<span id="nameFromQSParam"> there</span></h1>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row h-65 align-items-center" id="midRow">
+                    <div class="col">
+                        <!-- Consent -->
+                        <div class="row justify-content-center" id="permissionForm">
+                            <div class="col-8 justify-content-center text-center">
+                                <p class="lead text-center">
+                                    To verify you, we need to gather some details, including some selfies
+                                </p>
+                                <p class="small text-center">This should take about 30 seconds</p>
+
+                                <br />
+                                <p class="text-center font-weight-light">
+                                    We store everything <i>very</i> securely, and only use it with your consent (which you can revoke at any time)
+                                </p>
+                                <p class="text-center font-weight-light">
+                                    May we proceed?
+                                </p><br />
+                                <a href="#" onclick="ConsentYes();" class="btn btn-primary m-1">Yes</a><a href="#" onclick="ConsentNo();" class="btn btn-secondary m-1">No thanks</a>
+                            </div>
+                        </div>
+                        <!-- Consent No -->
+                        <div class="row justify-content-center" id="consentNo" style="display:none">
+                            <div class="col-8 justify-content-center text-center">
+                                <p class="lead text-center">
+                                    We understand. We'll send a note back to your requestor indicating that you declined consent.
+                                </p>
+                                <p class="small text-center">You can refresh this page and opt back in at any time</p>
+                            </div>
+                        </div>
+                        <!-- Capture ID Camera -->
+                        <div class="row justify-content-center" id="idCaptureRow" style="display:none">
+                            <div class="col-8 justify-content-center text-center" id="centerColumnForID">
+                                <div class="row justify-content-center">
+                                    <div class="col justify-content-center" id="idCaptureImagePlaceholder">
+                                        <video id="idCapturePreview" autoplay playsinline></video>
+                                        <canvas id="idCaptureCanvas" width="1024" height="768" style="display:none"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col justify-content-center">
+                                        <a href="#" class="btn btn-primary" onclick="CaptureIDPicture();">Capture</a>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col justify-content-center">
+                                        <p class="lead">Position your document with the picture-side up and click the "Capture" button</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Capture ID Manually -->
+                        <div class="row justify-content-center" style="display:none" id="formRow">
+                            <div class="col-10 justify-content-center">
+                                <form onsubmit="CaptureID();">
+                                    <div class="form-group">
+                                        <label for="idNumber">South African ID Number</label>
+                                        <input type="number" inputmode="numeric" pattern="[0-9]*" class="form-control" id="idNumber" aria-describedby="idNumber" placeholder="ID Number">
+                                        <small id="idNumberHelp" class="form-text text-muted">We will use this for verification and onboarding only. For more information see our Privacy Policy.</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Screen Preview -->
+                        <div class="row justify-content-center" id="enclosingCol">
+                            <div class="col-8 justify-content-center" id="centerColumn">
+                                <canvas id="jeeFaceFilterCanvas" style="display:none" class="border-success" width="1024" height="480" />
+                            </div>
+                        </div>
+                        <!-- Instruction Row For Capture -->
+                        <div class="row justify-content-center" id="instructionsRow" style="display:none">
+                            <div class="col-10 justify-content-center text-center">
+                                <img id="successTick" style="display:none" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/CompleteTick.gif" />
+                                <img id="warningTick" style="display:none" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/WarningAnimated.gif" />
+                                <p class="lead">
+                                    <span id="FaceWidthOutput">Please move your head around a bit</span>
+                                </p>
+                                <small id="smallText">Left-to-right, and up-and-down</small>
+                            </div>
+                        </div>
+                        <!-- Row for progress for uploading -->
+                        <div class="row justify-content-center m-2" style="display:none" id="progressBarRow">
+                            <div class="col-10">
+                                <div class="progress">
+                                    <div id="progressBar" class="progress-bar " role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                        Uploading 25%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- To confirm third party source -->
+                        <div class="row justify-content-center h-65" id="thirdPartyConfirm" style="display:none">
+                            <div class="col-10 h-65">
+                                <div class="row justify-content-center">
+                                    <div class="col">
+                                        <p class="lead text-center">
+                                            Please complete the missing digits below.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col">
+                                        <p class="text-center font-weight-light">
+                                            This is just to confirm your identity. We won't store this information.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col">
+                                        <p class="lead text-center" id="thirdPartyTextElement">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col justify-content-center text-center">
+                                        <a href="#" class="btn btn-primary m-1 disabled" id="doneThirdCharButton" onclick="doneThirdParty()" >I'm done</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row" style="display:none">
+                    <div class="col">
+                        <img id="leftFace" width="100" /><br /><small>Left</small>
+                    </div>
+                    <div class="col">
+                        <img id="rightFace" width="100" /><br /><small>Right</small>
+                    </div>
+                    <div class="col">
+                        <img id="straightFace" width="100" /><br /><small>Straight</small>
+                    </div>
+                    <div class="col">
+                        <img id="downFace" width="100" /><br /><small>Down</small>
+                    </div>
+                    <div class="col">
+                        <img id="upFace" width="100" /><br /><small>Up</small>
+                    </div>
+                </div>
+
+                <div class="row h-10">
+                    <div class="col align-self-end d-block d-sm-none">
+                        <img class="img-fluid" alt="Responsive image" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/BottomChrome.png" />
+                    </div>
+                    <div class="col d-none d-sm-block m-1 bg-light align-self-end">
+                        <p class="lead">Mint Vision Verify</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Uh Oh, something went wrong</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span id="errorMessageText">Unfortunately an error has occurred</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- For cropping -->
+    <canvas id="cropCanvas" style="display:none"></canvas>
+
+    <!-- Loading Spinner -->
+    <div id="loadingOverlay">
+        <div id="spinner" class="spinner-border  text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/de4b9f1452.js" crossorigin="anonymous"></script>
+
+    <!-- INCLUDE JEELIZ FACEFILTER SCRIPT -->
+    <script src="scripts/jeelizFaceFilter.js"></script>
+
+    <!-- INCLUDE THREE.JS -->
+    <script src="scripts/threejs/v90/three.min.js"></script>
+
+    <!-- INCLUDE JEELIZ THREE.JS HELPER -->
+    <script src="scripts/JeelizThreejsHelper.js"></script>
+
+    <!-- INCLUDE JEELIZRESIZER -->
+    <script src="scripts/JeelizResizer.js"></script>
+
+    <!-- INCLUDE RUNING AVERAGE THAT DRIVES ALL OF THIS -->
+    <script src="scripts/runningAverage.js"></script>
+
+    <!-- LIVENESS -->
+    <script src="scripts/livenessverification.js"></script>
+    <!-- CALLING MINT VISION -->
+    <script src="scripts/mintvisionwrapper.js"></script>
+    <!-- CALLING THIRD PARTY -->
+    <script src="scripts/thirdpartywrapper.js"></script>
+
+</body>
+</html>
