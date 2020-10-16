@@ -383,18 +383,18 @@ function CheckForEnoughFacesAndRealnessAndSubmit() {
     }
 }
 
-import { JeelizResizer } from "./JeelizResizer";
+import { JeelizResizer } from "./JeelizResizer.js";
 // Consent Given
 function ConsentYes() {
-    document.getElementById("permissionForm").style.display = 'none';
+    // document.getElementById("permissionForm").style.display = 'none';
 
     if (_regResults.idPictureCaptureRequested) {
-        document.getElementById('idCaptureRow').style.display = 'block';
+        // document.getElementById('idCaptureRow').style.display = 'block';
         StartIDCaptureVideo();
     }
     else {
         // Show the fill-in-id part and start the face tracking
-        document.getElementById('formRow').style.display = 'block';
+        // document.getElementById('formRow').style.display = 'block';
 
         // Here, check if the picture of ID is required, or enter ID is required
         JeelizResizer.size_canvas({
