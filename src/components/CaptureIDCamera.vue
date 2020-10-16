@@ -6,7 +6,7 @@
         <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
 
         <v-card-actions>
-            <v-btn color="blue" text @click="CaptureIDPicture">Capture</v-btn>
+            <v-btn color="blue" text @click="CaptureIDPicture" :loading="loading">Capture</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -16,6 +16,7 @@ import Vue from 'vue';
 export default {
     data: () => ({
         windowSize: { x: 0, y: 0, },
+        loading: false
     }),
     methods: {
         CaptureIDPicture: () => Vue.CaptureIDPicture(),
