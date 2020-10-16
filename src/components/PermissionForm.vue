@@ -24,7 +24,10 @@ export default {
             this.$emit('nextComponent', CaptureIDCamera);
             Vue.ConsentYes();
         },
-        ConsentNo: () => Vue.ConsentNo(),
+        ConsentNo: function() {
+            this.$emit('nextComponent', ConsentNo);
+            Vue.ConsentNo();
+        },
     }
 }
 </script>

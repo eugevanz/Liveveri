@@ -19,7 +19,10 @@ export default {
         loading: false
     }),
     methods: {
-        CaptureIDPicture: () => Vue.CaptureIDPicture(),
+        CaptureIDPicture: () => {
+            this.$emit('nextComponent', ScreenPreview);
+            Vue.CaptureIDPicture();
+        },
         onResize: function() {
             this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 544 }
         },
