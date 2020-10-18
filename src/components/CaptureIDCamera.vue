@@ -13,6 +13,8 @@
 
 <script>
 import Vue from 'vue';
+
+import ScreenPreview from './ScreenPreview';
 export default {
     data: () => ({
         windowSize: { x: 0, y: 0, },

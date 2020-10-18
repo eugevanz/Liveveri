@@ -127,8 +127,7 @@ var _thirdPartyFieldValue = null;
 
 import { JEEFACEFILTERAPI } from "./jeelizFaceFilter";
 // entry point:
-(function () {
-
+function main() {
     // Bind Resize Event
     window.onresize = function () {
         ResizeCanvas();
@@ -152,7 +151,7 @@ import { JEEFACEFILTERAPI } from "./jeelizFaceFilter";
     var conf3rdParty = getUrlParameter("conf3rdParty");
     if ((conf3rdParty !== undefined) && (conf3rdParty !== null) && (conf3rdParty === "true"))
         _regResults.thirdPartyCheck.requestedInQS = true;
-});
+}
 
 // Resize the window
 function ResizeCanvas() {
@@ -897,6 +896,7 @@ function doneThirdParty() {
 
 export default {
     install: function (Vue) {
+        Vue.Main = main;
         Vue.ConsentYes = ConsentYes;
         Vue.ConsentNo = ConsentNo;
         Vue.CaptureIDPicture = CaptureIDPicture;

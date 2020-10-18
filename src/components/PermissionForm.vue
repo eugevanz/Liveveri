@@ -16,6 +16,7 @@
 import Vue from 'vue';
 
 import CaptureIDCamera from './CaptureIDCamera';
+import ConsentNo from './ConsentNo';
 
 export default {
     props: {},
