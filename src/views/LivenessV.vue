@@ -137,7 +137,7 @@ export default {
         }
     },
     methods: {
-        next: function(value) { this.currentStep = value; },
+        next: function(params) { this.currentStep = params; },
         // ConsentNo: () => Vue.ConsentNo(),
         // CaptureIDPicture: () => Vue.CaptureIDPicture(),
         // CaptureID: () => Vue.CaptureID(),

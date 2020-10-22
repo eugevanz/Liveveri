@@ -4,8 +4,16 @@
         <v-card-subtitle>We store everything <i>very</i> securely, and only use it with your consent (which you can revoke at any time).</v-card-subtitle>
 
         <v-card-actions>
-            <v-btn text color="green accent-4" @click="next(2)">Proceed</v-btn>
-            <v-btn text color="orange" @click="next(1)">No, Thanks</v-btn>
+            <v-btn depressed dark color="green accent-4" @click="next(2)">Proceed</v-btn>
+            <v-dialog v-model="dialog" persistent max-width="256">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn text color="orange" v-bind="attrs" v-on="on">No, Thanks</v-btn>
+                </template>
+                <v-card>
+                    <v-card-title class="headline">We understand. We'll send a note back to your requestor indicating that you declined consent.</v-card-title>
+                    <v-card-text>You can refresh this page and opt back in at any time.</v-card-text>
+                </v-card>
+            </v-dialog>
         </v-card-actions>
     </v-card>
 </template>
@@ -23,6 +31,9 @@ export default {
             required: true
         }
     },
+    data: () => ({
+        dialog: false
+    }),
     methods: {
         // ConsentYes: function() {
         //     this.$emit('consent', 2);

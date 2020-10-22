@@ -4,7 +4,8 @@
             <v-text-field id="idNumber" :rules="idRules" :counter="counter" label="South African ID Number" hint="We will use this for verification and onboarding only. For more information see our Privacy Policy." required></v-text-field>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="captureID" text>Submit</v-btn>
+            <v-btn @click="captureID" depressed dark color="green accent-4">Submit</v-btn>
+            <v-btn text @click="next(2)">Cancel</v-btn>
         </v-card-actions>
     </v-card>
 </template>

@@ -1,12 +1,13 @@
 <template>
     <v-card id="idCaptureRow" v-resize="onResize" flat>
-        <video id="idCapturePreview" ref="idCapturePreview" :width="windowSize.x" height="480" autoplay playsinline></video>
-        <canvas id="idCaptureCanvas" ref="idCaptureCanvas" :width="windowSize.x" :height="windowSize.y"></canvas>
+        <video id="idCapturePreview" ref="idCapturePreview" width="640" height="480" autoplay></video>
+        <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="640" height="480"></canvas>
 
         <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
         <v-card-actions>
-            <v-btn color="blue" dark @click="capture" :loading="loading">Capture</v-btn>
-            <v-btn color="green" dark @click="next(3)">Continue</v-btn>
+            <v-btn color="blue" depressed dark @click="capture" :loading="loading">Capture</v-btn>
+            <v-btn color="green accent-4" depressed dark @click="next(3)">Continue</v-btn>
+            <v-btn text @click="next(1)">Cancel</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -44,16 +45,15 @@ export default {
     },
     mounted () {
         this.onResize();
-        this.video = this.$refs.idCapturePreview;
-        // if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        //     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-        //         this.video.src = window.URL.createObjectURL(stream);
-        //         this.video.play();
-        //     });
-        // }
-
-        if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({video: true});
+        var video = this.$refs.idCapturePreview;
+        // Get access to the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(
+                function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                }
+            ).catch(function(err) { alert(err); });
         }
     },
 }
