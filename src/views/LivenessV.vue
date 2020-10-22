@@ -1,5 +1,37 @@
 <template>
-    <v-card flat>
+    <v-stepper v-model="currentStep" vertical outlined>
+        <v-list-item two-line id="topRow">
+            <v-list-item-content>
+                <v-list-item-title class="display-2">VisionVerify.ai</v-list-item-title>
+                <v-list-item-subtitle class="title ml-4">We need to verify your identity</v-list-item-subtitle>
+            </v-list-item-content>
+
+            <v-list-item-avatar size="96">
+                <v-img src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/II_Square_Logo_640.png"></v-img>
+            </v-list-item-avatar>
+        </v-list-item>
+
+        <v-stepper-step step="1">To verify you, we need to gather some details, including some selfies</v-stepper-step>
+        <v-stepper-content step="1">
+            <permission-form :next="next"></permission-form>
+        </v-stepper-content>
+
+        <v-stepper-step step="2">Capture your face</v-stepper-step>
+        <v-stepper-content step="2">
+            <capture-id-camera :next="next"></capture-id-camera>
+        </v-stepper-content>
+
+        <v-stepper-step step="3">Verifying your ID</v-stepper-step>
+        <v-stepper-content step="3">
+            <capture-id-manually :next="next"></capture-id-manually>
+        </v-stepper-content>
+
+        <v-stepper-step step="4">Position your document with the picture-side up and click the "Capture" button</v-stepper-step>
+        <v-stepper-content step="4">
+            <screen-preview :next="next"></screen-preview>
+        </v-stepper-content>
+    </v-stepper>
+    <!-- <v-card flat>
         <v-list-item two-line id="topRow">
             <v-list-item-content>
                 <v-list-item-title class="display-2">VisionVerify.ai</v-list-item-title>
@@ -60,29 +92,29 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </v-card>
+    </v-card> -->
 </template>
 
 <script>
-import Vue from 'vue';
+// import Vue from 'vue';
 
-import CaptureIDCamera from '../components/CaptureIDCamera';
-import CaptureIDManually from '../components/CaptureIDManually';
-import ConsentNo from '../components/ConsentNo';
+import CaptureIdCamera from '../components/CaptureIDCamera';
+import CaptureIdManually from '../components/CaptureIDManually';
+// import ConsentNo from '../components/ConsentNo';
 import PermissionForm from '../components/PermissionForm';
 import ScreenPreview from '../components/ScreenPreview';
-import ThirdPartySource from '../components/ThirdPartySource';
-import UploadProgress from '../components/UploadProgress';
+// import ThirdPartySource from '../components/ThirdPartySource';
+// import UploadProgress from '../components/UploadProgress';
 
 export default {
     components: { 
-        CaptureIDCamera,
-        CaptureIDManually,
-        ConsentNo,
+        CaptureIdCamera,
+        CaptureIdManually,
+    //     ConsentNo,
         PermissionForm,
         ScreenPreview,
-        ThirdPartySource,
-        UploadProgress
+    //     ThirdPartySource,
+    //     UploadProgress
     },
     // props: {
     //     guid: {
@@ -92,7 +124,7 @@ export default {
     // },
     data() {
         return {
-            currentComponent: PermissionForm,
+            // currentComponent: PermissionForm,
             idRules: [
             v => !!v || 'ID Number is required',
             v => /^[0-9]*$/.test(v) || 'ID Number can only be numerics between 0 and 9',
@@ -101,16 +133,15 @@ export default {
             progress: 25,
             valid: 'jhgvghhjsknflfvbhj',
             errorModal: false,
+            currentStep: 1
         }
     },
     methods: {
-        ConsentYes: () => Vue.ConsentYes(),
-        ConsentNo: () => Vue.ConsentNo(),
-        CaptureIDPicture: () => Vue.CaptureIDPicture(),
-        CaptureID: () => Vue.CaptureID(),
-        doneThirdParty: () => Vue.doneThirdParty(),
-
-        nextComponent: function(value) { this.currentComponent = value }
+        next: function(value) { this.currentStep = value; },
+        // ConsentNo: () => Vue.ConsentNo(),
+        // CaptureIDPicture: () => Vue.CaptureIDPicture(),
+        // CaptureID: () => Vue.CaptureID(),
+        // doneThirdParty: () => Vue.doneThirdParty(),
     }, 
     // mounted: {
     //     if (this.$route.params.verifyId) {

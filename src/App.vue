@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import LivenessV from './views/LivenessV.vue'
 export default {
     components: { LivenessV },
-    mounted() {
-        Vue.Main();
-    }
+    // mounted() {
+    //     Vue.Main();
+    // }
 }
 </script>

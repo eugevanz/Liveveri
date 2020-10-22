@@ -1,17 +1,23 @@
 <template>
-    <v-card id="formRow" flat ref="formRow" style="display: none;">
+    <v-card id="formRow" flat ref="formRow">
         <v-card-text>
             <v-text-field id="idNumber" :rules="idRules" :counter="counter" label="South African ID Number" hint="We will use this for verification and onboarding only. For more information see our Privacy Policy." required></v-text-field>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="CaptureID" text>Submit</v-btn>
+            <v-btn @click="captureID" text>Submit</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
-import Vue from 'vue';
+// import Vue from 'vue';
 export default {
+    props: {
+        next: {
+            type: Function,
+            required: true
+        }
+    },
     data: () => ({
         idRules: [
             v => !!v || 'ID Number is required',
@@ -20,7 +26,10 @@ export default {
         counter: 13,
     }),
     methods: {
-        CaptureID: () => Vue.CaptureID(),
+        captureID: function() {
+            this.next(4);
+            // Vue.CaptureID();
+        },
     }
 }
 </script>
