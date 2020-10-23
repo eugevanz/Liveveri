@@ -1,7 +1,7 @@
 <template>
     <v-card id="idCaptureRow" v-resize="onResize" flat>
-        <video id="idCapturePreview" ref="idCapturePreview" width="640" height="480" autoplay></video>
-        <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="640" height="480"></canvas>
+        <video id="idCapturePreview" ref="idCapturePreview" :width="windowSize.x" :height="windowSize.y" autoplay></video>
+        <!-- <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="640" height="480"></canvas> -->
 
         <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
         <v-card-actions>
@@ -35,7 +35,7 @@ export default {
         //     Vue.CaptureIDPicture();
         // },
         onResize: function() {
-            this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 552 }
+            this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 416 }
         },
         capture() {
             this.canvas = this.$refs.idCaptureCanvas;
