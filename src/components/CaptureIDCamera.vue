@@ -1,7 +1,14 @@
 <template>
     <v-card id="idCaptureRow" v-resize="onResize" flat>
-        <video id="idCapturePreview" ref="idCapturePreview" :width="windowSize.x" :height="windowSize.y" autoplay></video>
-        <!-- <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="640" height="480"></canvas> -->
+        <v-row>
+            <v-col>
+                <video id="idCapturePreview" ref="idCapturePreview" :width="windowSize.x" :height="windowSize.y" autoplay></video>
+            </v-col>
+            <v-col>
+                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" :width="windowSize.x" :height="windowSize.y" style="display: none;"></canvas>
+                <v-img v-for="capture in captures" :key="capture" :src="capture"></v-img>
+            </v-col>
+        </v-row>
 
         <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
         <v-card-actions>
@@ -30,16 +37,14 @@ export default {
         loading: false
     }),
     methods: {
-        // CaptureIDPicture: function() {
-        //     this.$emit('nextComponent', ScreenPreview);
-        //     Vue.CaptureIDPicture();
-        // },
         onResize: function() {
             this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 416 }
         },
         capture() {
             this.canvas = this.$refs.idCaptureCanvas;
-            this.canvas.getContext("2d").drawImage(this.video, 0, 0, 640, 480);
+            var context = this.canvas.getContext("2d")
+            
+            context.drawImage(this.$refs.idCapturePreview, 0, 0, this.windowSize.x, this.windowSize.y);
             this.captures.push(this.canvas.toDataURL("image/png"));
         }
     },
@@ -50,6 +55,7 @@ export default {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true }).then(
                 function(stream) {
+                    // video.width.ideal = 
                     video.srcObject = stream;
                     video.play();
                 }
