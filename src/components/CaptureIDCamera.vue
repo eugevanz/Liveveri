@@ -1,12 +1,16 @@
 <template>
     <v-card id="idCaptureRow" v-resize="onResize" flat>
         <v-row>
-            <v-col>
-                <video id="idCapturePreview" ref="idCapturePreview" :width="windowSize.x" :height="windowSize.y" autoplay></video>
+            <v-col sm="7">
+                <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video>
             </v-col>
-            <v-col>
-                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" :width="windowSize.x" :height="windowSize.y" style="display: none;"></canvas>
-                <v-img v-for="capture in captures" :key="capture" :src="capture"></v-img>
+            <v-col sm="5">
+                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="1024" height="768" style="display: none;"></canvas>
+                <v-row dense>
+                    <v-col v-for="capture in captures" :key="capture" sm="6">
+                        <v-img :src="capture"></v-img>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
 
@@ -44,7 +48,7 @@ export default {
             this.canvas = this.$refs.idCaptureCanvas;
             var context = this.canvas.getContext("2d")
             
-            context.drawImage(this.$refs.idCapturePreview, 0, 0, this.windowSize.x, this.windowSize.y);
+            context.drawImage(this.$refs.idCapturePreview, 0, 0, 1024, 768);
             this.captures.push(this.canvas.toDataURL("image/png"));
         }
     },
