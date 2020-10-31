@@ -5,7 +5,7 @@
 
         <v-card-actions>
             <v-btn depressed dark color="green accent-4" @click="next(2)">Proceed</v-btn>
-            <v-dialog v-model="dialog" persistent max-width="256">
+            <v-dialog v-model="dialog" persistent max-width="512">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn text color="orange" v-bind="attrs" v-on="on">No, Thanks</v-btn>
                 </template>

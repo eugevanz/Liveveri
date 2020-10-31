@@ -1,6 +1,6 @@
 <template>
     <v-card id="enclosingCol" flat>
-        <canvas id="jeeFaceFilterCanvas" style="display:none;" width="1024" height="480" ref="jeeFaceFilterCanvas"/>
+        <canvas id="jeeFaceFilterCanvas" width="1024" height="768" ref="jeeFaceFilterCanvas"/>
 
         <v-list-item id="instructionsRow" two-line>
             <v-list-item-content>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 export default {
     props: {
         next: {
@@ -26,7 +27,10 @@ export default {
     },
     data: () => ({
         success: false
-    })
+    }),
+    mounted() {
+        Vue.faceFilter();
+    }
 }
 </script>
 

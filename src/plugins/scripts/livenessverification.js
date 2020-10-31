@@ -1,5 +1,7 @@
 "use strict";
 
+import $ from "jquery";
+
 // To be gotten fro Querystring
 var _tempToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL21pbnRpaXZpc2lvbnNlcnZpY2UuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpL2lkZW50aWZ5L2NsYWltcy90ZW5hbnQiOiJWaXNpb25WZXJpZnkuYWkiLCJodHRwczovL21pbnRpaXZpc2lvbnNlcnZpY2UuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpL2lkZW50aWZ5L2NsYWltcy90ZW5hbnRfdG9rZW4iOiJ7XHJcbiAgXCJkZXZpY2VOYW1lXCI6IFwicG93ZXJhcHBzXCIsXHJcbiAgXCJ0ZW5hbnROYW1lXCI6IFwiVmlzaW9uVmVyaWZ5LmFpXCIsXHJcbiAgXCJ1c2VyXCI6IG51bGwsXHJcbiAgXCJzdWJUZW5hbnRcIjogbnVsbCxcclxuICBcImFwaVZlcnNpb25cIjogbnVsbFxyXG59IiwibmJmIjoxNjAxOTEwNzM4LCJleHAiOjE2MDE5OTcxMzgsImlhdCI6MTYwMTkxMDczOCwiaXNzIjoiaHR0cHM6Ly9taW50aWl2aXNpb25zZXJ2aWNlLmF6dXJld2Vic2l0ZXMubmV0LyJ9.H8HEp-3otGupjaxHP1YuatEDtQPcJgyl4TQE8CQfFsA";
 var _tempLsToken = "3af44b1ab46f4c69a281bb75b454da32";
@@ -73,7 +75,7 @@ var _regResults = {
 var _visionWrapper = null;
 var _thirdPartyService = null;
 
-import RunningAverageDoubleClass from "./runningAverage";
+import RunningAverageDoubleClass from './runningAverage.js'
 // Tracking Points
 var _faceWidthToHeightRatio = new RunningAverageDoubleClass(RUNNING_AVERAGES);
 var _ryAngle = new RunningAverageDoubleClass(RUNNING_AVERAGES);
@@ -115,7 +117,7 @@ var _spoofAverage = 0;
 
 // Found Person Data; should really live in an object
 var _mintPersonID = null;
-// var _mintPersonName = null;
+var _mintPersonName = null;
 
 // Number of faces added to person
 var _facesToBeSubmitted = new Array();
@@ -123,15 +125,15 @@ var _facesToBeSubmitted = new Array();
 //var _confirmThirdParty = false;
 var _thirdPartyFieldValue = null;
 // var _thirdPartyFieldName = null;
-// var _numThirdChars = 0;
+var _numThirdChars = 0;
 
-import { JEEFACEFILTERAPI } from "./jeelizFaceFilter";
 // entry point:
-function main() {
+$(document).ready(function () {
+
     // Bind Resize Event
-    window.onresize = function () {
+    $(window).resize(function () {
         ResizeCanvas();
-    }
+    });
 
     // Force resize
     ResizeCanvas();
@@ -141,7 +143,7 @@ function main() {
     if ((_regResults.nameFromQS === undefined) || (_regResults.nameFromQS === null) || (_regResults.nameFromQS === "") )
         HandleError("Unfortunately this page was loaded with no name to be checked.");
     else {
-        document.getElementById('nameFromQSParam').innerText = ", " + FirstNameFromName(_regResults.nameFromQS);
+        $("#nameFromQSParam").text(", " + FirstNameFromName(_regResults.nameFromQS));
     }
     // Should we use the ID Capture?
     var capIdPic = getUrlParameter("useIDDoc");
@@ -151,15 +153,16 @@ function main() {
     var conf3rdParty = getUrlParameter("conf3rdParty");
     if ((conf3rdParty !== undefined) && (conf3rdParty !== null) && (conf3rdParty === "true"))
         _regResults.thirdPartyCheck.requestedInQS = true;
-}
+});
 
 // Resize the window
 function ResizeCanvas() {
-    document.getElementById('jeeFaceFilterCanvas').style.width = document.getElementById('centerColumn').offsetWidth;
-    console.log(document.getElementById('midRow').style.height);
-    document.getElementById('idCapturePreview').style.height = document.getElementById('midRow').style.height/2.5;
+    $("#jeeFaceFilterCanvas").width(document.getElementById('centerColumn').offsetWidth);
+    console.log($("#midRow").height());
+    $("#idCapturePreview").height($("#midRow").height()/2.5);
 }
 
+import { JEEFACEFILTERAPI } from './jeelizFaceFilter.js'
 // Start it all up
 function init_faceFilter(){
   JEEFACEFILTERAPI.init({
@@ -189,7 +192,7 @@ function init_faceFilter(){
 
           // Is there no face?
           if (detectState.detected <= DETECT_THRESHOLD) {
-            document.getElementById('FaceWidthOutput').innerText = "I don't see a face. Please center yourself in the viewfinder.";
+              $("#FaceWidthOutput").text("I don't see a face; please center yourself in the viewfinder");
               ResetFacesDetected();
               return;
           }
@@ -215,13 +218,13 @@ function init_faceFilter(){
           var movement = Math.abs(Math.round(_faceWidthToHeightRatio.GetIndexOfDispersion() * 1000000));
           if (movement <= THRESHOLD_OF_FACE_TO_CONSIDER) {
               if (!_isFaceReal)
-                document.getElementById('FaceWidthOutput').innerText = "Please move your head around a bit";
+                  $("#FaceWidthOutput").text("Please move your head around a bit");
               return;
           }
           if (movement >= THRESHOLD_OF_FACE_MOVEMENT_FOR_ZOOMING) {
 
               if (!_isFaceReal)
-                document.getElementById("FaceWidthOutput").innerText = "Please move a little slower";
+                  $("#FaceWidthOutput").text("Please move a little slower");
               return;
           }
 
@@ -244,7 +247,7 @@ function ResetFacesDetected() {
 
 // Capture most-left and most-right faces
 function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, height) {
-    var canvasElement = document.getElementById('jeeFaceFilterCanvas');
+    var canvasElement = $('#jeeFaceFilterCanvas');
 
     var madeAChange = false;
     // Left-Right - Check if over threshold
@@ -254,8 +257,8 @@ function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, h
             if (leftRightAngle < _mostLeftAngle) {
                 _mostLeftAngle = leftRightAngle;
                 _mostLeftFace = CropPlusExport(left, top, width, height);
-                document.getElementById('leftFace').setAttribute("src", _mostLeftFace);
-                canvasElement.classList.add("border-left");
+                $("#leftFace").attr("src", _mostLeftFace);
+                canvasElement.addClass("border-left");
                 madeAChange = true;
             }
         }
@@ -263,8 +266,8 @@ function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, h
             if (leftRightAngle > _mostRightAngle) {
                 _mostRightAngle = leftRightAngle;
                 _mostRightFace = CropPlusExport(left, top, width, height);
-                document.getElementById('rightFace').setAttribute("src", _mostRightFace);
-                canvasElement.classList.add("border-right");
+                $("#rightFace").attr("src", _mostRightFace);
+                canvasElement.addClass("border-right");
                 madeAChange = true;
             }
         }
@@ -276,8 +279,8 @@ function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, h
             if (upDownAngle < _mostUpAngle) {
                 _mostUpAngle = upDownAngle;
                 _mostUpFace = CropPlusExport(left, top, width, height);
-                document.getElementById('upFace').setAttribute("src", _mostUpFace);
-                canvasElement.classList.add("border-top");
+                $("#upFace").attr("src", _mostUpFace);
+                canvasElement.addClass("border-top");
                 madeAChange = true;
             }
         }
@@ -287,8 +290,8 @@ function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, h
             if (upDownAngle > _mostDownAngle) {
                 _mostDownAngle = upDownAngle;
                 _mostDownFace = CropPlusExport(left, top, width, height);
-                document.getElementById('downFace').setAttribute("src", _mostDownFace);
-                canvasElement.classList.add("border-bottom");
+                $("#downFace").attr("src", _mostDownFace);
+                canvasElement.addClass("border-bottom");
                 madeAChange = true;
             }
         }
@@ -302,7 +305,7 @@ function CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, h
         if (_mostStraightFace !== null)
             _previousMostStraightFace = _mostStraightFace;
         _mostStraightFace = CropPlusExport(left, top, width, height);
-        document.getElementById("straightFace").setAttribute("src", _mostStraightFace);
+        $("#straightFace").attr("src", _mostStraightFace);
         madeAChange = true;
     }
 
@@ -328,7 +331,7 @@ function CropPlusExport() {
     //ctx1.drawImage(faceCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
     //var im = canvas1.toDataURL();
-    //document.getElementById("debugIm").setAttribute("src", im);
+    //$("#debugIm").attr("src", im);
     //// return the .toDataURL of the temp canvas
     //return (im);
 }
@@ -345,7 +348,7 @@ function CheckForRealness() {
         _numRealDetects++;
 
     if (_numRealDetects > NUM_DETECTS_FOR_REAL_FACE) {
-        //document.getElementById("FaceWidthOutput").innerText = ("Face Is Real");
+        //$("#FaceWidthOutput").text("Face Is Real");
         _isFaceReal = true;
     }
 
@@ -357,7 +360,7 @@ function CheckForRealness() {
         if (_areSubmitting)
             return;
         ResetFacesDetected();
-        document.getElementById('FaceWidthOutput').innerText = "I don't see a face; please center yourself in the viewfinder";
+        $("#FaceWidthOutput").text("I don't see a face; please center yourself in the viewfinder");
     }, TIME_FOR_FACE_TO_STAY_REAL);
 }
 
@@ -382,18 +385,18 @@ function CheckForEnoughFacesAndRealnessAndSubmit() {
     }
 }
 
-import { JeelizResizer } from "./JeelizResizer.js";
+import { JeelizResizer } from './JeelizResizer.js'
 // Consent Given
 function ConsentYes() {
-    // document.getElementById("permissionForm").style.display = 'none';
+    $("#permissionForm").hide();
 
     if (_regResults.idPictureCaptureRequested) {
-        // document.getElementById('idCaptureRow').style.display = 'block';
+        $("#idCaptureRow").show();
         StartIDCaptureVideo();
     }
     else {
         // Show the fill-in-id part and start the face tracking
-        // document.getElementById('formRow').style.display = 'block';
+        $("#formRow").show()
 
         // Here, check if the picture of ID is required, or enter ID is required
         JeelizResizer.size_canvas({
@@ -407,8 +410,8 @@ function ConsentYes() {
 
 // No Consent Given
 function ConsentNo() {
-    document.getElementById("consentNo").style.display = 'block';
-    document.getElementById("permissionForm").style.display = 'none';
+    $("#consentNo").show();
+    $("#permissionForm").hide();
 }
 
 // Start the video capture for the ID Document
@@ -439,7 +442,7 @@ function StopIdCaptureVideo() {
     player.srcObject.getVideoTracks().forEach(track => track.stop());
 }
 
-import mintVisionWrapper from './mintvisionwrapper'
+import mintVisionWrapper from './mintvisionwrapper.js'
 // Capture the ID Pic
 function CaptureIDPicture(){
     var player = document.getElementById('idCapturePreview');
@@ -459,7 +462,7 @@ function CaptureIDPicture(){
 
     _visionWrapper.SubmitIDDoc(im).then(function (result) {
         // Show the fill-in-id part and start the face tracking
-        document.getElementById('idCaptureRow').style.display = "none";
+        $("#idCaptureRow").hide();
         StopIdCaptureVideo();
 
         hideSpinner();
@@ -479,13 +482,13 @@ function CaptureIDPicture(){
             PreLoad3rdPartyDetails();
         }
         if ((_regResults.idNumber === undefined) || (_regResults.idNumber === null)) {
-            document.getElementById('formRow').style.display = 'block';
+            $("#formRow").show();
         }
         else {
 
             // CompareNameAndName(result.FullName, _personNameFromQS);
-            document.getElementById('jeeFaceFilterCanvas').style.display = 'block';
-            document.getElementById('instructionsRow').style.display = 'block';
+            $("#jeeFaceFilterCanvas").show();
+            $("#instructionsRow").show();
         }
         console.log(JSON.stringify(result));
     }).catch(reason => HandleFetchError(reason));
@@ -502,12 +505,12 @@ function CaptureID() {
     if (_visionWrapper === null)
         _visionWrapper = new mintVisionWrapper(_tempToken);
 
-    _regResults.idNumber = document.getElementById('idNumber').value;
+    _regResults.idNumber = $("#idNumber").val();
     _visionWrapper.FindPersonFromID(_regResults.idNumber).then(function (result) { CheckForFoundPerson(result); }).catch(reason => HandleFetchError(reason));
 
-    document.getElementById('formRow').style.display = 'none';
-    document.getElementById('jeeFaceFilterCanvas').style.display = 'block';
-    document.getElementById('instructionsRow').style.display = 'block';
+    $("#formRow").hide();
+    $("#jeeFaceFilterCanvas").show();
+    $("#instructionsRow").show();
     PreLoad3rdPartyDetails();
 
     // Todo: Capture an ID here?
@@ -521,7 +524,7 @@ function CheckForFoundPerson(peopleResult) {
     // Check for a result
     if ((peopleResult !== null) && (peopleResult.people !== null) && (peopleResult.people.length !== 0)) {
         _mintPersonID = peopleResult.people[0].id;
-        // _mintPersonName = peopleResult.people[0].name;
+        _mintPersonName = peopleResult.people[0].name;
     }
 }
 
@@ -576,8 +579,8 @@ function SendForLiveness(base64Image) {
 function LivenessCheckComplete() {
     console.log("Average Spoof: " + _spoofAverage + "; Average Liveness: " + _realnessAverage + "; is Spoof OVer: " + _isSpoofOverThreshold);
 
-    document.getElementById('jeeFaceFilterCanvas').style.display = 'none';
-    document.getElementById('instructionsRow').style.display = 'none';
+    $("#jeeFaceFilterCanvas").hide();
+    $("#instructionsRow").hide();
 
     // Are we doing third party?
     if (_regResults.thirdPartyCheck.requestedInQS)
@@ -589,14 +592,14 @@ function LivenessCheckComplete() {
 // SHow that things are complete
 function Complete() {
     if (IsSpoof()) {
-        document.getElementById('warningTick').style.display = 'block';
-        document.getElementById('FaceWidthOutput').innerText = "Verified with warnings";
-        document.getElementById('smallText').innerText = "You have been verified but some information doesn't match; you will be verified once someone has checked your profile";
+        $("#warningTick").show();
+        $("#FaceWidthOutput").text("Verified with warnings");
+        $("#smallText").text("You have been verified but some information doesn't match; you will be verified once someone has checked your profile");
     }
     else {
-        document.getElementById('successTick').style.display = 'block';
-        document.getElementById('FaceWidthOutput').innerText = "Thank-you";
-        document.getElementById('smallText').innerText = "You have been verified";
+        $("#successTick").show();
+        $("#FaceWidthOutput").text("Thank-you");
+        $("#smallText").text("You have been verified");
     }
 
     // Do the submission
@@ -662,7 +665,7 @@ function ProcessFace() {
         _visionWrapper = new mintVisionWrapper(_tempToken);
 
     // Update process bar
-    document.getElementById('progressBarRow').style.display = 'block';
+    $("#progressBarRow").show();
 
     // Pick the first one
     for (var i = 0; i < _facesToBeSubmitted.length; i++) {
@@ -670,9 +673,7 @@ function ProcessFace() {
 
             var percentageComplete = Math.round((i / _facesToBeSubmitted.length) * 100);
 
-            document.getElementById('progressBar').setAttribute("aria-valuenow", percentageComplete)
-            document.getElementById('progressBar').style.width = percentageComplete + "%"
-            document.getElementById('progressBar').innerText = "Uploading " + percentageComplete + "%";
+            $("#progressBar").attr("aria-valuenow", percentageComplete).css("width", percentageComplete + "%").text("Uploading " + percentageComplete + "%");
             _facesToBeSubmitted[i].submitted = true;
             _visionWrapper.AddPersonFace(_facesToBeSubmitted[i].personID, _facesToBeSubmitted[i].base64Image).then(function () {
                 ProcessFace();
@@ -681,7 +682,7 @@ function ProcessFace() {
         }
     }
 
-    document.getElementById('progressBarRow').style.display = 'none';
+    $("#progressBarRow").hide();
 }
 
 // Get first name from name
@@ -711,19 +712,18 @@ function HandleFetchError(reason) {
 }
 function HandleError(message) {
     console.log("Error! " + message);
-    document.getElementById('errorMessageText').innerText = message;
-    document.getElementById('errorModal').modal();
+    $("#errorMessageText").text(message);
+    $('#errorModal').modal();
 }
 
 // SPinner show and hide
 function showSpinner() {
-    document.getElementById('loadingOverlay').style.display = 'block';
+    $("#loadingOverlay").show();
 }
 function hideSpinner() {
-    document.getElementById('loadingOverlay').style.display = 'none';
+    $("#loadingOverlay").hide();
 }
 
-import thirdPartySource from './thirdpartywrapper'
 // ----------------------- Third Party Confirmation ----------------------------------------
 function PreLoad3rdPartyDetails() {
     // Assumed that the idNumber is correct here
@@ -775,15 +775,15 @@ function TryFetchAddressDetails() {
                 }
             }
         })
-        .catch(function () {
+        .catch(function (reason) {
             NoThirdPartyToConfirm();
         });
 }
 
 // Load a third party field
-function LoadThirdPartyField(fieldValue) {
+function LoadThirdPartyField(fieldValue, fieldSource, fieldName) {
     _thirdPartyFieldValue = fieldValue;
-    // _thirdPartyFieldName = fieldName;
+    _thirdPartyFieldName = fieldName;
 }
 
 // To confirm third party
@@ -809,25 +809,25 @@ function ConfirmThirdPartyValue() {
         if (_thirdPartyFieldValue.length > MIN_THIRD_PARTY_LENGTH_FOR_4_CHARS) {
             char4Pos = getRandomPlaceInString(copyField);
             copyField = copyField.substring(0, char4Pos) + "*" + copyField.substring(char4Pos + 1, copyField.length);
-            // _numThirdChars = 4;
+            _numThirdChars = 4;
         }
         else
-            // _numThirdChars = 3;
+            _numThirdChars = 3;
 
         var numInputsAdded = 1;
         // Add to the fields
         for (var i = 0; i < _thirdPartyFieldValue.length; i++) {
             if ((i === char1Pos) || (i === char2Pos) || (i === char3Pos) || (i === char4Pos)) {
-                document.getElementById('thirdPartyTextElement').insertAdjacentHTML('afterend', '<input type="text" style="width:20px;" size="1" maxlength="1" id="thirdChar' + numInputsAdded + '" onkeyup="thirdCharEntered(this, ' + numInputsAdded++ + ')" />');
+                $("#thirdPartyTextElement").append($('<input type="text" style="width:20px;" size="1" maxlength="1" id="thirdChar' + numInputsAdded + '" onkeyup="thirdCharEntered(this, ' + numInputsAdded++ + ')" />'));
             }
             else
-                document.getElementById('thirdPartyTextElement').insertAdjacentHTML('afterend', "<span>" + _thirdPartyFieldValue[i] + "</span>");
+                $("#thirdPartyTextElement").append($("<span>" + _thirdPartyFieldValue[i] + "</span>"));
         }
 
         // Show the element
-        document.getElementById('thirdPartyConfirm').style.display = 'block';
+        $("#thirdPartyConfirm").show();
         // Focus on the first block
-        document.getElementById('thirdChar1').focus();
+        $("#thirdChar1").focus();
     }
     else {
         console.log("Error on finding third party string");
@@ -863,38 +863,41 @@ function getRandomPlaceInString(strVal) {
 }
 
 // When a char is entered
-// function thirdCharEntered(inputEl,charNum) {
-//     console.log(document.getElementById(inputEl).getAttribute("id"));
-//     if (charNum === 1)
-//         document.getElementById('thirdChar2').focus();
-//     else if (charNum === 2)
-//         document.getElementById("thirdChar3").focus();
-//     else if (charNum === 3) {
-        // if (_numThirdChars === 4)
-//             document.getElementById("thirdChar4").focus();
-//         else {
-//             document.getElementById("doneThirdCharButton").classList.remove("disabled");
-//             document.getElementById("thirdChar3").blur();
-//         }
-//     }
-//     else if (charNum === 4) {
-//         document.getElementById("doneThirdCharButton").classList.remove("disabled");
-//         document.getElementById("thirdChar4").blur();
-//     }
-// }
+function thirdCharEntered(inputEl,charNum) {
+    console.log($(inputEl).attr("id"));
+    if (charNum === 1)
+        $("#thirdChar2").focus();
+    else if (charNum === 2)
+        $("#thirdChar3").focus();
+    else if (charNum === 3) {
+        if (_numThirdChars === 4)
+            $("#thirdChar4").focus();
+        else {
+            $("#doneThirdCharButton").removeClass("disabled");
+            $("#thirdChar3").blur();
+        }
+    }
+    else if (charNum === 4) {
+        $("#doneThirdCharButton").removeClass("disabled");
+        $("#thirdChar4").blur();
+    }
+}
 
 /// Done with third party check
 function doneThirdParty() {
-    if (document.getElementById("doneThirdCharButton").classList.contains("disabled"))
+    if ($("#doneThirdCharButton").hasClass("disabled"))
         return;
 
-    document.getElementById("thirdPartyConfirm").style.display = 'none';
-    document.getElementById("instructionsRow").style.display = 'block';
+    $("#thirdPartyConfirm").hide();
+    $("#instructionsRow").show();
 
     Complete();
 }
 
 export default {
+    mounted() {
+        main()
+    },
     install: function (Vue) {
         Vue.Main = main;
         Vue.ConsentYes = ConsentYes;
@@ -902,5 +905,6 @@ export default {
         Vue.CaptureIDPicture = CaptureIDPicture;
         Vue.CaptureID = CaptureID;
         Vue.doneThirdParty = doneThirdParty;
+        Vue.faceFilter = init_faceFilter
     }
 }

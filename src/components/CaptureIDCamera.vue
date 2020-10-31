@@ -7,8 +7,8 @@
             <v-col sm="5">
                 <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="1024" height="768" style="display: none;"></canvas>
                 <v-row dense>
-                    <v-col v-for="capture in captures" :key="capture" sm="6">
-                        <v-img :src="capture"></v-img>
+                    <v-col sm="6">
+                        <v-img :src="captured"></v-img>
                     </v-col>
                 </v-row>
             </v-col>
@@ -37,8 +37,8 @@ export default {
         windowSize: { x: 0, y: 0, },
         video: {},
         canvas: {},
-        captures: [],
-        loading: false
+        loading: false,
+        captured: null
     }),
     methods: {
         onResize: function() {
@@ -49,7 +49,7 @@ export default {
             var context = this.canvas.getContext("2d")
             
             context.drawImage(this.$refs.idCapturePreview, 0, 0, 1024, 768);
-            this.captures.push(this.canvas.toDataURL("image/png"));
+            this.captured = this.canvas.toDataURL("image/png");
         }
     },
     mounted () {
@@ -59,9 +59,9 @@ export default {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true }).then(
                 function(stream) {
-                    // video.width.ideal = 
+                    video.facingMode = "environment";
                     video.srcObject = stream;
-                    video.play();
+                    // video.play();
                 }
             ).catch(function(err) { alert(err); });
         }
