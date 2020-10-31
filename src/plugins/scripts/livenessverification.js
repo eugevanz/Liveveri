@@ -124,7 +124,7 @@ var _facesToBeSubmitted = new Array();
 
 //var _confirmThirdParty = false;
 var _thirdPartyFieldValue = null;
-// var _thirdPartyFieldName = null;
+var _thirdPartyFieldName = null;
 var _numThirdChars = 0;
 
 // entry point:
@@ -725,6 +725,7 @@ function hideSpinner() {
 }
 
 // ----------------------- Third Party Confirmation ----------------------------------------
+import thirdPartySource from './thirdpartywrapper.js'
 function PreLoad3rdPartyDetails() {
     // Assumed that the idNumber is correct here
     if (_thirdPartyService === null)
@@ -775,7 +776,7 @@ function TryFetchAddressDetails() {
                 }
             }
         })
-        .catch(function (reason) {
+        .catch(function () {
             NoThirdPartyToConfirm();
         });
 }
@@ -863,25 +864,25 @@ function getRandomPlaceInString(strVal) {
 }
 
 // When a char is entered
-function thirdCharEntered(inputEl,charNum) {
-    console.log($(inputEl).attr("id"));
-    if (charNum === 1)
-        $("#thirdChar2").focus();
-    else if (charNum === 2)
-        $("#thirdChar3").focus();
-    else if (charNum === 3) {
-        if (_numThirdChars === 4)
-            $("#thirdChar4").focus();
-        else {
-            $("#doneThirdCharButton").removeClass("disabled");
-            $("#thirdChar3").blur();
-        }
-    }
-    else if (charNum === 4) {
-        $("#doneThirdCharButton").removeClass("disabled");
-        $("#thirdChar4").blur();
-    }
-}
+// function thirdCharEntered(inputEl,charNum) {
+//     console.log($(inputEl).attr("id"));
+//     if (charNum === 1)
+//         $("#thirdChar2").focus();
+//     else if (charNum === 2)
+//         $("#thirdChar3").focus();
+//     else if (charNum === 3) {
+//         if (_numThirdChars === 4)
+//             $("#thirdChar4").focus();
+//         else {
+//             $("#doneThirdCharButton").removeClass("disabled");
+//             $("#thirdChar3").blur();
+//         }
+//     }
+//     else if (charNum === 4) {
+//         $("#doneThirdCharButton").removeClass("disabled");
+//         $("#thirdChar4").blur();
+//     }
+// }
 
 /// Done with third party check
 function doneThirdParty() {
@@ -895,11 +896,11 @@ function doneThirdParty() {
 }
 
 export default {
-    mounted() {
-        main()
-    },
+    // mounted() {
+    //     main()
+    // },
     install: function (Vue) {
-        Vue.Main = main;
+        // Vue.Main = main;
         Vue.ConsentYes = ConsentYes;
         Vue.ConsentNo = ConsentNo;
         Vue.CaptureIDPicture = CaptureIDPicture;
