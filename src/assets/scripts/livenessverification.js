@@ -894,18 +894,3 @@ function doneThirdParty() {
 
     Complete();
 }
-
-export default {
-    // mounted() {
-    //     main()
-    // },
-    install: function (Vue) {
-        // Vue.Main = main;
-        Vue.ConsentYes = ConsentYes;
-        Vue.ConsentNo = ConsentNo;
-        Vue.CaptureIDPicture = CaptureIDPicture;
-        Vue.CaptureID = CaptureID;
-        Vue.doneThirdParty = doneThirdParty;
-        Vue.faceFilter = init_faceFilter
-    }
-}

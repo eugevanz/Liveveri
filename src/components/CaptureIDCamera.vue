@@ -45,14 +45,16 @@ export default {
             this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 416 }
         },
         capture() {
-            this.canvas = this.$refs.idCaptureCanvas;
-            var context = this.canvas.getContext("2d")
-            
-            context.drawImage(this.$refs.idCapturePreview, 0, 0, 1024, 768);
-            this.captured = this.canvas.toDataURL("image/png");
+            const canvas = document.getElementById("idCaptureCanvas");
+            this.vueCanvas.drawImage(this.$refs.idCapturePreview, 0, 0, 1024, 768);
+            this.captured = canvas.toDataURL("image/png");
         }
     },
     mounted () {
+        var c = document.getElementById("idCaptureCanvas");
+        var ctx = c.getContext("2d");    
+        this.vueCanvas = ctx;
+
         this.onResize();
         var video = this.$refs.idCapturePreview;
         // Get access to the camera
