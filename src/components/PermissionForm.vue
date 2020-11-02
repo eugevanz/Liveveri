@@ -4,7 +4,7 @@
         <v-card-subtitle>We store everything <i>very</i> securely, and only use it with your consent (which you can revoke at any time).</v-card-subtitle>
 
         <v-card-actions>
-            <v-btn depressed dark color="green accent-4" @click="next(2)">Proceed</v-btn>
+            <v-btn depressed dark color="success" @click="next(2)">Proceed</v-btn>
             <v-dialog v-model="dialog" persistent max-width="512">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn text color="orange" v-bind="attrs" v-on="on">No, Thanks</v-btn>
@@ -19,10 +19,6 @@
 </template>
 
 <script>
-// import Vue from 'vue';
-
-// import CaptureIDCamera from './CaptureIDCamera';
-// import ConsentNo from './ConsentNo';
 
 export default {
     props: {

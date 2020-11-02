@@ -30,69 +30,30 @@
         <v-stepper-content step="4">
             <screen-preview :next="next"></screen-preview>
         </v-stepper-content>
-    </v-stepper>
-    <!-- <v-card flat>
-        <v-list-item two-line id="topRow">
-            <v-list-item-content>
-                <v-list-item-title class="display-2">VisionVerify.ai</v-list-item-title>
-                <v-list-item-subtitle class="title ml-4">We need to verify your identity</v-list-item-subtitle>
-            </v-list-item-content>
 
-            <v-list-item-avatar size="96">
-                <v-img src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/II_Square_Logo_640.png"></v-img>
-            </v-list-item-avatar>
-        </v-list-item>
+        <v-stepper-step step="5">Third party confirmation</v-stepper-step>
+        <v-stepper-content step="5">
+            <third-party-source :next="next"></third-party-source>
+        </v-stepper-content>
 
-        <v-container>
-            <component :is="currentComponent" class="mt-16" @nextComponent="nextComponent($event)"></component>
-        </v-container>
+        <v-stepper-step step="6">Finish</v-stepper-step>
+        <v-stepper-content step="6">
+            <upload-progress></upload-progress>
+        </v-stepper-content>
 
-        <v-container>      
-            <v-card flat style="display:none">
-                <v-card-text>
-                    <v-row justify="space-around">
-                        <v-col md="4">
-                            <v-img id="leftFace" src="https://picsum.photos/510/300?random">
-                                <v-card-title>Left</v-card-title>
-                            </v-img>
-                        </v-col>
-                        <v-col md="4">
-                            <v-img id="rightFace" src="https://picsum.photos/510/300?random">
-                                <v-card-title>Right</v-card-title>
-                            </v-img>
-                        </v-col>
-                        <v-col md="4">
-                            <v-img id="straightFace" src="https://picsum.photos/510/300?random">
-                                <v-card-title>Straight</v-card-title>
-                            </v-img>
-                        </v-col>
-                        <v-col md="4">
-                            <v-img id="downFace" src="https://picsum.photos/510/300?random">
-                                <v-card-title>Down</v-card-title>
-                            </v-img>
-                        </v-col>
-                        <v-col md="4">
-                            <v-img id="upFace" src="https://picsum.photos/510/300?random">
-                                <v-card-title>Up</v-card-title>
-                            </v-img>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-            </v-card>
-        </v-container>
-
-        <v-dialog id="errorModal" v-model="errorModal" max-width="290">
+        <v-dialog v-model="dialog" persistent max-width="512">
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" class="float-button" rounded dark large color="error">
+                    <v-icon left>mdi-close</v-icon> Cancel
+                </v-btn>
+            </template>
             <v-card>
-                <v-card-title id="exampleModalLongTitle" class="headline">Uh Oh, something went wrong</v-card-title>
-                <v-card-text id="errorMessageText">Unfortunately an error has occurred</v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="errorModal = false">Close</v-btn>
-                </v-card-actions>
+                <v-card-subtitle class="headline">We understand. We'll send a note back to your requestor indicating that you declined consent.</v-card-subtitle>
+                <v-card-text>You can refresh this page and opt back in at any time.</v-card-text>
             </v-card>
         </v-dialog>
-    </v-card> -->
+        
+    </v-stepper>
 </template>
 
 <script>
@@ -100,28 +61,26 @@
 
 import CaptureIdCamera from '../components/CaptureIDCamera';
 import CaptureIdManually from '../components/CaptureIDManually';
-// import ConsentNo from '../components/ConsentNo';
 import PermissionForm from '../components/PermissionForm';
 import ScreenPreview from '../components/ScreenPreview';
-// import ThirdPartySource from '../components/ThirdPartySource';
-// import UploadProgress from '../components/UploadProgress';
+import ThirdPartySource from '../components/ThirdPartySource';
+import UploadProgress from '../components/UploadProgress';
 
 export default {
     components: { 
         CaptureIdCamera,
         CaptureIdManually,
-    //     ConsentNo,
         PermissionForm,
         ScreenPreview,
-    //     ThirdPartySource,
-    //     UploadProgress
+        ThirdPartySource,
+        UploadProgress
     },
-    // props: {
-    //     guid: {
-    //         type: String,
-    //         required: true
-    //     }
-    // },
+    props: {
+        guid: {
+            type: String,
+            required: false
+        }
+    },
     data() {
         return {
             // currentComponent: PermissionForm,
@@ -130,10 +89,10 @@ export default {
             v => /^[0-9]*$/.test(v) || 'ID Number can only be numerics between 0 and 9',
             v => v.length == 13 || 'ID number must be 13 characters',
             ],
-            progress: 25,
             valid: 'jhgvghhjsknflfvbhj',
             errorModal: false,
-            currentStep: 1
+            currentStep: 1,
+            dialog: false
         }
     },
     methods: {
@@ -150,3 +109,14 @@ export default {
     // }
 };
 </script>
+
+<style scoped>
+.float-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    transition: all 0.2s ease-in 0s;
+    z-index: 9999;
+    cursor: pointer;
+}
+</style>

@@ -17,8 +17,8 @@
         <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
         <v-card-actions>
             <v-btn color="blue" depressed dark @click="capture" :loading="loading">Capture</v-btn>
-            <v-btn color="green accent-4" depressed dark @click="next(3)">Continue</v-btn>
-            <v-btn text @click="next(1)">Cancel</v-btn>
+            <v-btn color="success" depressed dark @click="next(3)">Continue</v-btn>
+            <v-btn text @click="next(1)">Back</v-btn>
         </v-card-actions>
     </v-card>
 </template>

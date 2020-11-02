@@ -1,18 +1,19 @@
 <template>
     <v-card id="enclosingCol" flat>
-        <canvas id="jeeFaceFilterCanvas" width="1024" height="480" ref="jeeFaceFilterCanvas"/>
+        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video>
+        <canvas id="jeeFaceFilterCanvas" width="1024" height="480" ref="jeeFaceFilterCanvas" style="display: none;"/>
 
         <v-list-item id="instructionsRow" two-line>
             <v-list-item-content>
                 <v-list-item-title id="FaceWidthOutput" ref="FaceWidthOutput" class="headline">Please move your head around a bit</v-list-item-title>
                 <v-list-item-subtitle id="smallText">Left-to-right, and up-and-down</v-list-item-subtitle>
             </v-list-item-content>
-
-            <v-list-item-avatar size="80">
-                <v-img v-if="success" id="successTick" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/CompleteTick.gif"></v-img>
-                <v-img v-else id="warningTick" src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/WarningAnimated.gif"></v-img>
-            </v-list-item-avatar>
         </v-list-item>
+
+        <v-card-actions>
+            <v-btn depressed dark color="success" @click="next(5)">Next</v-btn>
+            <v-btn text @click="next(3)">Back</v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -309,6 +310,18 @@ export default {
         this._ryAngle = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),
         this._rxAngle = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),
         this.faceFilter();
+
+        var video = this.$refs.idCapturePreview;
+        // Get access to the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(
+                function(stream) {
+                    video.facingMode = "environment";
+                    video.srcObject = stream;
+                    // video.play();
+                }
+            ).catch(function(err) { alert(err); });
+        }
     }
 }
 </script>
