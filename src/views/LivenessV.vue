@@ -1,6 +1,6 @@
 <template>
-    <v-stepper v-model="currentStep" vertical outlined>
-        <v-list-item two-line id="topRow">
+    <v-stepper v-model="currentStep" alt-labels>
+        <!-- <v-list-item two-line id="topRow">
             <v-list-item-content>
                 <v-list-item-title class="display-2">VisionVerify.ai</v-list-item-title>
                 <v-list-item-subtitle class="title ml-4">We need to verify your identity</v-list-item-subtitle>
@@ -9,37 +9,53 @@
             <v-list-item-avatar size="96">
                 <v-img src="https://mintiiaccesscontrol.z6.web.core.windows.net/MobileApplication/II_Square_Logo_640.png"></v-img>
             </v-list-item-avatar>
-        </v-list-item>
+        </v-list-item> -->
 
-        <v-stepper-step step="1">To verify you, we need to gather some details, including some selfies</v-stepper-step>
-        <v-stepper-content step="1">
-            <permission-form :next="next"></permission-form>
-        </v-stepper-content>
+        <v-stepper-header>
+            <v-stepper-step step="1"></v-stepper-step>
+            <v-divider></v-divider>
 
-        <v-stepper-step step="2">Capture your face</v-stepper-step>
-        <v-stepper-content step="2">
-            <capture-id-camera :next="next"></capture-id-camera>
-        </v-stepper-content>
+            <v-stepper-step step="2"></v-stepper-step>
+            <v-divider></v-divider>
 
-        <v-stepper-step step="3">Verifying your ID</v-stepper-step>
-        <v-stepper-content step="3">
-            <capture-id-manually :next="next"></capture-id-manually>
-        </v-stepper-content>
+            <v-stepper-step step="3"></v-stepper-step>
+            <v-divider></v-divider>
 
-        <v-stepper-step step="4">Position your document with the picture-side up and click the "Capture" button</v-stepper-step>
-        <v-stepper-content step="4">
-            <screen-preview :next="next"></screen-preview>
-        </v-stepper-content>
+            <v-stepper-step step="4"></v-stepper-step>
+            <v-divider></v-divider>
 
-        <v-stepper-step step="5">Third party confirmation</v-stepper-step>
-        <v-stepper-content step="5">
-            <third-party-source :next="next"></third-party-source>
-        </v-stepper-content>
+            <v-stepper-step step="5"></v-stepper-step>
+            <v-divider></v-divider>
 
-        <v-stepper-step step="6">Finish</v-stepper-step>
-        <v-stepper-content step="6">
-            <upload-progress></upload-progress>
-        </v-stepper-content>
+            <v-stepper-step step="6"></v-stepper-step>
+            <v-divider></v-divider>
+        </v-stepper-header>
+
+        <v-stepper-items>
+            <v-stepper-content step="1">
+                <permission-form :next="next"></permission-form>
+            </v-stepper-content>
+
+            <v-stepper-content step="2">
+                <capture-id-camera :next="next"></capture-id-camera>
+            </v-stepper-content>
+
+            <v-stepper-content step="3">
+                <capture-id-manually :next="next"></capture-id-manually>
+            </v-stepper-content>
+
+            <v-stepper-content step="4">
+                <screen-preview :next="next"></screen-preview>
+            </v-stepper-content>
+
+            <v-stepper-content step="5">
+                <third-party-source :next="next"></third-party-source>
+            </v-stepper-content>
+
+            <v-stepper-content step="6">
+                <upload-progress></upload-progress>
+            </v-stepper-content>
+        </v-stepper-items>
 
         <v-dialog v-model="dialog" persistent max-width="512">
             <template v-slot:activator="{ on, attrs }">

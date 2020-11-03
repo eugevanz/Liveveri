@@ -1,5 +1,6 @@
 <template>
     <v-card id="idCaptureRow" v-resize="onResize" flat>
+        <v-card-title class="headline">Capture your face</v-card-title>
         <v-row>
             <v-col sm="7">
                 <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video>
@@ -14,7 +15,7 @@
             </v-col>
         </v-row>
 
-        <v-card-title>Position your document with the picture-side up and click the "Capture" button</v-card-title>
+        <v-card-subtitle>Position your document with the picture-side up and click the "Capture" button</v-card-subtitle>
         <v-card-actions>
             <v-btn color="blue" depressed dark @click="capture" :loading="loading">Capture</v-btn>
             <v-btn color="success" depressed dark @click="next(3)">Continue</v-btn>

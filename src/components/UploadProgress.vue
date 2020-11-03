@@ -1,6 +1,6 @@
 <template>
     <v-card id="progressBarRow" flat>
-        <v-card-title>Thank You!</v-card-title>
+        <v-card-title class="headline">Thank You!</v-card-title>
         <v-card-subtitle>You have been successfully verified</v-card-subtitle>
         <v-card-actions>
             <v-progress-linear id="progressBar" v-model="progress" height="25" rounded buffer-value="0" background-color="blue-grey">

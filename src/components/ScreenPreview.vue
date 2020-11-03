@@ -1,7 +1,8 @@
 <template>
     <v-card id="enclosingCol" flat>
-        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video>
-        <canvas id="jeeFaceFilterCanvas" width="1024" height="480" ref="jeeFaceFilterCanvas" style="display: none;"/>
+        <v-card-title class="headline">Verifying liveliness</v-card-title>
+        <!-- <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video> -->
+        <canvas id="jeeFaceFilterCanvas" :width="windowSize.x" :height="windowSize.y" ref="jeeFaceFilterCanvas"/>
 
         <v-list-item id="instructionsRow" two-line>
             <v-list-item-content>
@@ -31,6 +32,7 @@ export default {
         }
     },
     data: () => ({
+        windowSize: { x: 0, y: 0, },
         success: false,
         RUNNING_AVERAGES: 10,
         THRESHOLD_OF_FACE_MOVEMENT_FOR_ZOOMING: 300,
@@ -111,6 +113,9 @@ export default {
         _numThirdChars: 0,
     }),
     methods: {
+        onResize: function() {
+            this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+        },
         CropPlusExport() {
             // Dummy fo now
             return this.vueCanvas.toDataURL();
@@ -302,6 +307,8 @@ export default {
         }
     },
     mounted() {
+        this.onResize();
+
         var c = document.getElementById("jeeFaceFilterCanvas");
         var ctx = c.getContext("2d");  
         this.vueCanvas = ctx;

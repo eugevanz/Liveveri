@@ -1,5 +1,6 @@
 <template>
     <v-card id="formRow" flat ref="formRow">
+        <v-card-title class="headline">Verifying your ID</v-card-title>
         <v-card-text>
             <v-text-field id="idNumber" :rules="idRules" :counter="counter" label="South African ID Number" hint="We will use this for verification and onboarding only. For more information see our Privacy Policy." required></v-text-field>
         </v-card-text>

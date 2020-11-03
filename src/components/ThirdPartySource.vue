@@ -1,6 +1,7 @@
 <template>
     <v-card id="thirdPartyConfirm" flat>
-        <v-card-title class="headline">Please complete the missing digits below.</v-card-title>
+        <v-card-title class="headline">Third party confirmation</v-card-title>
+        <v-card-subtitle class="headline">Please complete the missing digits below.</v-card-subtitle>
         <v-card-subtitle>This is just to confirm your identity. We won't store this information.</v-card-subtitle>
         <v-card-subtitle id="thirdPartyTextElement"></v-card-subtitle>
         <v-card-text>

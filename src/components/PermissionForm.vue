@@ -1,6 +1,7 @@
 <template>
     <v-card id="permissionForm" flat ref="permissionForm">
-        <v-card-title>This should take about 30 seconds</v-card-title>
+        <v-card-title class="headline">To verify you, we need to gather some details, including some selfies</v-card-title>
+        <v-card-subtitle>This should take about 30 seconds</v-card-subtitle>
         <v-card-subtitle>We store everything <i>very</i> securely, and only use it with your consent (which you can revoke at any time).</v-card-subtitle>
 
         <v-card-actions>
