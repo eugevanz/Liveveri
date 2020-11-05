@@ -32,14 +32,6 @@ export default {
         dialog: false
     }),
     methods: {
-        // ConsentYes: function() {
-        //     this.$emit('consent', 2);
-        //     Vue.ConsentYes();
-        // },
-        // ConsentNo: function() {
-        //     this.$emit('consent', 1);
-        //     Vue.ConsentNo();
-        // },
     }
 }
 </script>

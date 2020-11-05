@@ -2,7 +2,7 @@
     <v-app>
 
         <v-main>
-          <v-container><liveness-v></liveness-v></v-container>
+            <liveness-v></liveness-v>
         </v-main>
 
     </v-app>

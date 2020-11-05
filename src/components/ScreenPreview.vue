@@ -1,8 +1,8 @@
 <template>
     <v-card id="enclosingCol" flat>
         <v-card-title class="headline">Verifying liveliness</v-card-title>
-        <!-- <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video> -->
-        <canvas id="jeeFaceFilterCanvas" :width="windowSize.x" :height="windowSize.y" ref="jeeFaceFilterCanvas"/>
+        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay style="display: none;"></video>
+        <canvas id="jeeFaceFilterCanvas" :width="windowSize.x" ref="jeeFaceFilterCanvas"/>
 
         <v-list-item id="instructionsRow" two-line>
             <v-list-item-content>
@@ -21,7 +21,7 @@
 <script>
 // import JEEFACEFILTERAPI from '@/assets/scripts/jeelizFaceFilter.js';
 // import $ from "jquery";
-import RunningAverageDoubleClass from '@/assets/scripts/runningAverage.js'
+import RunningAverageDoubleClass from '@/assets/runningAverage.js'
 import { JEEFACEFILTERAPI, NN_4EXPR } from 'facefilter';
 
 export default {
@@ -114,7 +114,13 @@ export default {
     }),
     methods: {
         onResize: function() {
-            this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+            var x = this.windowSize.x
+            if (window.innerWidth > 640) {
+                x = 640;
+            } else {
+                x = window.innerWidth;
+            }
+            this.windowSize = { x: x, y: window.innerHeight }
         },
         CropPlusExport() {
             // Dummy fo now
@@ -155,9 +161,10 @@ export default {
                 clearTimeout(this._faceTimeOut);
 
             this._faceTimeOut = setTimeout(function () {
-                if (this._areSubmitting)
-                    return;
-                this.ResetFacesDetected();
+                if (this._areSubmitting) return;
+                    
+                this._isFaceReal = false;
+                this._numRealDetects = 0;
                 this.refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
             }, this.TIME_FOR_FACE_TO_STAY_REAL);
         },
@@ -232,9 +239,11 @@ export default {
             this._numRealDetects = 0;
         },
         faceFilter() {
+            let _this = this;
             const canvas = this.vueCanvas;
+
             JEEFACEFILTERAPI.init({
-                canvas,
+                canvas: canvas,
                 NNC: NN_4EXPR, // root of NNC.json file
                 maxFacesDetected: 1,
                 followZRot: true,
@@ -243,8 +252,8 @@ export default {
                         console.log('AN ERROR HAPPENS. ERR =', errCode);
                         return;
                     }
-                    this._videoWidth = spec.videoElement.videoWidth;
-                    this._videoHeight = spec.videoElement.videoHeight;
+                    _this._videoWidth = spec.videoElement.videoWidth;
+                    _this._videoHeight = spec.videoElement.videoHeight;
 
                     console.log('INFO: JEEFACEFILTERAPI IS READY');
                 },
@@ -252,55 +261,53 @@ export default {
                 // called at each render iteration (drawing loop):
                 callbackTrack: function (detectState) {
                     // Are we done?
-                    if (this._areSubmitting)
+                    if (_this._areSubmitting)
                         return;
 
                     // Show the video
                     JEEFACEFILTERAPI.render_video();
-
+                    
                     // Is there no face?
-                    if (detectState.detected <= this.DETECT_THRESHOLD) {
-                        this.refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
-                        this.ResetFacesDetected();
+                    if (detectState.detected <= _this.DETECT_THRESHOLD) {
+                        _this.$refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
+                        _this.ResetFacesDetected();
                         return;
                     }
-
-
+                    
                     // Capture the images first
-                    var boxWidth = (this._videoWidth * detectState.s * this.BOUNDING_BOX_CORRECT_FACTOR);
-                    var leftBoundingBox = (this._videoWidth * detectState.x) + (this._videoWidth / 2) - (boxWidth / this.BOUNDING_BOX_CORRECT_FACTOR / 2);
-                    var topBoundBox = (this._videoHeight * (-detectState.y)) - (boxWidth / 2 / this.BOUNDING_BOX_CORRECT_FACTOR);
+                    var boxWidth = (_this._videoWidth * detectState.s * _this.BOUNDING_BOX_CORRECT_FACTOR);
+                    var leftBoundingBox = (_this._videoWidth * detectState.x) + (_this._videoWidth / 2) - (boxWidth / _this.BOUNDING_BOX_CORRECT_FACTOR / 2);
+                    var topBoundBox = (_this._videoHeight * (-detectState.y)) - (boxWidth / 2 / _this.BOUNDING_BOX_CORRECT_FACTOR);
                     if (topBoundBox < 0)
                         topBoundBox = 0;
                     if (leftBoundingBox < 0)
                         leftBoundingBox = 0;
-                    this.CaptureLeftRightImages(detectState.ry, detectState.rx, leftBoundingBox, topBoundBox, boxWidth, boxWidth);
-
+                    _this.CaptureLeftRightImages(detectState.ry, detectState.rx, leftBoundingBox, topBoundBox, boxWidth, boxWidth);
 
                     // There is a face; add points to the running average meter
-                    this._faceWidthToHeightRatio.AddPoint(detectState.s);
-                    this._ryAngle.AddPoint(detectState.ry);
-                    this._rxAngle.AddPoint(detectState.rx);
+                    _this._faceWidthToHeightRatio.AddPoint(detectState.s);
+                    _this._ryAngle.AddPoint(detectState.ry);
+                    _this._rxAngle.AddPoint(detectState.rx);
 
                     // Capture movement index
-                    var movement = Math.abs(Math.round(this._faceWidthToHeightRatio.GetIndexOfDispersion() * 1000000));
-                    if (movement <= this.THRESHOLD_OF_FACE_TO_CONSIDER) {
-                        if (!this._isFaceReal)
-                            this.refs.FaceWidthOutput.text = "Please move your head around a bit";
+                    var movement = Math.abs(Math.round(_this._faceWidthToHeightRatio.GetIndexOfDispersion() * 1000000));
+                    if (movement <= _this.THRESHOLD_OF_FACE_TO_CONSIDER) {
+                        if (!_this._isFaceReal)
+                            _this.$refs.FaceWidthOutput.text = "Please move your head around a bit";
                         return;
                     }
-                    if (movement >= this.THRESHOLD_OF_FACE_MOVEMENT_FOR_ZOOMING) {
-                        if (!this._isFaceReal)
-                            this.refs.FaceWidthOutput.text = "Please move a little slower";
+                    if (movement >= _this.THRESHOLD_OF_FACE_MOVEMENT_FOR_ZOOMING) {
+                        if (!_this._isFaceReal)
+                            _this.$refs.FaceWidthOutput.text = "Please move a little slower";
                         return;
                     }
 
-                    // Check if the face is twisting? This leads to many false positives
-                    if (Math.abs(detectState.rz) > this.MAX_TWIST_ANGLE_FOR_FACE)
+                    // Check if the face is twisting? _this leads to many false positives
+                    if (Math.abs(detectState.rz) > _this.MAX_TWIST_ANGLE_FOR_FACE)
                         return;
 
                     // Check for Realness
-                    this.CheckForRealness();
+                    _this.CheckForRealness();
 
                 }
             });
@@ -310,8 +317,10 @@ export default {
         this.onResize();
 
         var c = document.getElementById("jeeFaceFilterCanvas");
-        var ctx = c.getContext("2d");  
-        this.vueCanvas = ctx;
+        // c.width = 640;
+        // c.height = 480;
+        // var ctx = c.getContext("2d");  
+        this.vueCanvas = c;
 
         this._faceWidthToHeightRatio = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),
         this._ryAngle = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),

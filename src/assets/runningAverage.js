@@ -1,4 +1,3 @@
-
 export default function RunningAverageDoubleClass(runningSize) {
     this._currentWriteIndex = 0;
     this._currentWriteCount = 0;

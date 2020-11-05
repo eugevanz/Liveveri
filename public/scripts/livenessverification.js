@@ -75,7 +75,7 @@ var _regResults = {
 var _visionWrapper = null;
 var _thirdPartyService = null;
 
-import RunningAverageDoubleClass from './runningAverage.js'
+import RunningAverageDoubleClass from '../../src/assets/runningAverage.js'
 // Tracking Points
 var _faceWidthToHeightRatio = new RunningAverageDoubleClass(RUNNING_AVERAGES);
 var _ryAngle = new RunningAverageDoubleClass(RUNNING_AVERAGES);

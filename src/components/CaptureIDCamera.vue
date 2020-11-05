@@ -3,10 +3,10 @@
         <v-card-title class="headline">Capture your face</v-card-title>
         <v-row>
             <v-col sm="7">
-                <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay></video>
+                <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay :width="windowSize.x"></video>
             </v-col>
             <v-col sm="5">
-                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" width="1024" height="768" style="display: none;"></canvas>
+                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" :width="windowSize.x" :height="windowSize.y" style="display: none;"></canvas>
                 <v-row dense>
                     <v-col sm="6">
                         <v-img :src="captured"></v-img>
@@ -43,7 +43,13 @@ export default {
     }),
     methods: {
         onResize: function() {
-            this.windowSize = { x: window.innerWidth - 232, y: window.innerHeight - 416 }
+            var x = this.windowSize.x
+            if (window.innerWidth > 640) {
+                x = 640;
+            } else {
+                x = window.innerWidth;
+            }
+            this.windowSize = { x: x, y: window.innerHeight }
         },
         capture() {
             const canvas = document.getElementById("idCaptureCanvas");
