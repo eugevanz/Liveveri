@@ -2,7 +2,7 @@
     <v-card id="enclosingCol" flat>
         <v-card-title class="headline">Verifying liveliness</v-card-title>
         <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay style="display: none;"></video>
-        <canvas id="jeeFaceFilterCanvas" :width="windowSize.x" ref="jeeFaceFilterCanvas"/>
+        <canvas id="jeeFaceFilterCanvas" width="640" height="480" ref="jeeFaceFilterCanvas"/>
 
         <v-list-item id="instructionsRow" two-line>
             <v-list-item-content>
@@ -115,12 +115,18 @@ export default {
     methods: {
         onResize: function() {
             var x = this.windowSize.x
+            var y = this.windowSize.y
             if (window.innerWidth > 640) {
                 x = 640;
             } else {
                 x = window.innerWidth;
             }
-            this.windowSize = { x: x, y: window.innerHeight }
+            if (window.innerHeight > 480) {
+                y = 480;
+            } else {
+                y = window.innerHeight;
+            }
+            this.windowSize = { x: x, y: y }
         },
         CropPlusExport() {
             // Dummy fo now
@@ -143,17 +149,16 @@ export default {
         },
         CheckForRealness() {
             var angleChangeLeftRight = Math.abs(Math.round(this._ryAngle.GetIndexOfDispersion() * 10000));
-            console.log(angleChangeLeftRight);
-            if (angleChangeLeftRight > this.MAX_ANGLE_FACE_LEFTRIGHT)
-                this._numRealDetects++;
+            console.log(this._numRealDetects, this._isFaceReal);
+            if (angleChangeLeftRight > this.MAX_ANGLE_FACE_LEFTRIGHT) this._numRealDetects++;
             var angleChangeTopBottom = Math.abs(Math.round(this._rxAngle.GetIndexOfDispersion() * 10000));
 
-            if (angleChangeTopBottom > this.MAX_ANGLE_FACE_TOPBOTTOM)
-                this._numRealDetects++;
+            if (angleChangeTopBottom > this.MAX_ANGLE_FACE_TOPBOTTOM) this._numRealDetects++;
 
             if (this._numRealDetects > this.NUM_DETECTS_FOR_REAL_FACE) {
                 //$("#FaceWidthOutput").text("Face Is Real");
                 this._isFaceReal = true;
+                this.next(5);
             }
 
             // Set the timeout
