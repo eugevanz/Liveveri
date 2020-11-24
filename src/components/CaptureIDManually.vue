@@ -1,13 +1,13 @@
 <template>
-    <v-card id="formRow" flat ref="formRow">
-        <v-card-title class="headline">Verifying your ID</v-card-title>
-        <v-card-text>
-            <v-text-field id="idNumber" :rules="idRules" :counter="counter" label="South African ID Number" hint="We will use this for verification and onboarding only. For more information see our Privacy Policy." required></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-            <v-btn @click="captureID" depressed dark color="success">Submit</v-btn>
-            <v-btn text @click="next(2)">Back</v-btn>
-        </v-card-actions>
+    <v-card id="formRow" flat ref="formRow" class="mx-auto my-12 d-flex flex-column align-center" max-width="288">
+        <p class="headline ma-1 mt-4">ID verification</p>
+        <p class="font-weight-bold text-center" style="color: gray">We need to check your ID number against 3rd parties</p>
+        
+        <v-text-field class="my-5" id="idNumber" :rules="idRules" :counter="counter" label="South African ID Number" hint="*This is for verification and onboarding only. See Privacy Policy." persistent-hint required outlined></v-text-field>
+
+        <p class="font-weight-bold"><span class="headline align-self-end" style="color: #DA7967">1</span> of 3</p>
+
+        <v-btn @click="captureID" depressed dark color="#194B99" block class="">Submit</v-btn>
     </v-card>
 </template>
 

@@ -1,13 +1,12 @@
 <template>
-    <v-card id="progressBarRow" flat>
-        <v-card-title class="headline">Thank You!</v-card-title>
-        <v-card-subtitle>You have been successfully verified</v-card-subtitle>
-        <v-card-actions>
-            <v-progress-linear id="progressBar" v-model="progress" height="25" rounded buffer-value="0" background-color="blue-grey">
-                <strong v-if="progress < 100">Uploading {{ Math.ceil(progress) }}%</strong>
-                <strong v-else>Done!</strong>
-            </v-progress-linear>
-        </v-card-actions>
+    <v-card id="progressBarRow" flat class="mx-auto my-12 d-flex flex-column align-center" max-width="288">
+        <p class="headline ma-1 mt-4">Thank you!</p>
+        <p class="font-weight-bold text-center" style="color: gray">You have been successfully verified</p>
+
+        <span class="text-center caption mt-4">{{ response }}</span>
+        <v-progress-linear id="progressBar" v-model="progress" height="42" rounded color="#194B99" background-color="#A6A6A6"></v-progress-linear>
+        <strong style="color: #DA7967" v-if="progress < 100">{{ Math.ceil(progress) }}%</strong>
+        <strong style="color: #DA7967" v-else>Done!</strong>
     </v-card>
 </template>
 
@@ -16,6 +15,7 @@ export default {
     data: () => ({
         progress: 10,
         interval: 0,
+        response: 'Sending response...'
     }),
     beforeDestroy () {
       clearInterval(this.interval)
@@ -24,7 +24,7 @@ export default {
         progress (val) {
             if (val < 100) return
             // if (val > 99) this.progress = 0;
-            
+            this.response = "Response sent";
             this.startBuffer()
         },
     },

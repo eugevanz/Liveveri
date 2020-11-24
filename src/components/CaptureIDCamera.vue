@@ -1,26 +1,19 @@
 <template>
-    <v-card id="idCaptureRow" v-resize="onResize" flat>
-        <v-card-title class="headline">Capture your face</v-card-title>
-        <v-row>
-            <v-col sm="7">
-                <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay :width="windowSize.x"></video>
-            </v-col>
-            <v-col sm="5">
-                <canvas id="idCaptureCanvas" ref="idCaptureCanvas" :width="windowSize.x" :height="windowSize.y" style="display: none;"></canvas>
-                <v-row dense>
-                    <v-col sm="6">
-                        <v-img :src="captured"></v-img>
-                    </v-col>
-                </v-row>
-            </v-col>
-        </v-row>
+    <v-card id="idCaptureRow" class="mx-auto my-12 d-flex flex-column align-center" max-width="288" flat>
+        <p class="headline ma-1 mt-4">Scan document</p>
+        <p class="font-weight-bold text-center" style="color: gray">Position your document with the picture-side-up and click the "Capture" button</p>
 
-        <v-card-subtitle>Position your document with the picture-side up and click the "Capture" button</v-card-subtitle>
-        <v-card-actions>
-            <v-btn color="blue" depressed dark @click="capture" :loading="loading">Capture</v-btn>
-            <v-btn color="success" depressed dark @click="next(3)">Continue</v-btn>
-            <v-btn text @click="next(1)">Back</v-btn>
-        </v-card-actions>
+        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay width="288"></video>
+        <!-- <v-img :src="captured"></v-img> -->
+
+        <v-row>
+            <v-col><v-btn text @click="next(3)">Skip</v-btn></v-col>
+            <v-col><v-btn color="#194B99" outlined @click="capture" :loading="loading">Capture</v-btn></v-col>
+        </v-row>
+        
+        <p class="font-weight-bold"><span class="headline align-self-end" style="color: #DA7967">2</span> of 3</p>
+
+        <v-btn color="#194B99" depressed dark @click="next(3)" block>Next</v-btn>
     </v-card>
 </template>
 
@@ -59,8 +52,8 @@ export default {
     },
     mounted () {
         var c = document.getElementById("idCaptureCanvas");
-        var ctx = c.getContext("2d");    
-        this.vueCanvas = ctx;
+        // var ctx = c.getContext("2d");    
+        this.vueCanvas = c;
 
         this.onResize();
         var video = this.$refs.idCapturePreview;

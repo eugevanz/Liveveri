@@ -4,6 +4,8 @@
             <v-list-item-content>
                 <v-list-item-title class="display-2">VisionVerify.ai</v-list-item-title>
                 <v-list-item-subtitle class="title ml-4">We need to verify your identity</v-list-item-subtitle>
+                <v-icon>mdi-arrow-left-circle</v-icon>
+                <v-icon>mdi-arrow-left-thin-circle-outline</v-icon>
             </v-list-item-content>
 
             <v-list-item-avatar size="96">

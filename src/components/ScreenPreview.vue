@@ -1,20 +1,13 @@
 <template>
-    <v-card id="enclosingCol" flat>
-        <v-card-title class="headline">Verifying liveliness</v-card-title>
-        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay style="display: none;"></video>
-        <canvas id="jeeFaceFilterCanvas" width="640" height="480" ref="jeeFaceFilterCanvas"/>
+    <v-card id="enclosingCol" flat class="mx-auto my-12 d-flex flex-column align-center" max-width="288">
+        <p class="headline ma-1 mt-4">Liveness check</p>
+        <p id="FaceWidthOutput" ref="FaceWidthOutput" class="font-weight-bold text-center" style="color: gray">Please move your head around a bit... Left-to-right, Up-and-down</p>
 
-        <v-list-item id="instructionsRow" two-line>
-            <v-list-item-content>
-                <v-list-item-title id="FaceWidthOutput" ref="FaceWidthOutput" class="headline">Please move your head around a bit</v-list-item-title>
-                <v-list-item-subtitle id="smallText">Left-to-right, and up-and-down</v-list-item-subtitle>
-            </v-list-item-content>
-        </v-list-item>
+        <!-- <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay style="display: none;"></video> -->
+        <canvas id="jeeFaceFilterCanvas" width="288" height="216" ref="jeeFaceFilterCanvas"/>
 
-        <v-card-actions>
-            <v-btn depressed dark color="success" @click="next(5)">Next</v-btn>
-            <v-btn text @click="next(3)">Back</v-btn>
-        </v-card-actions>
+        <p class="font-weight-bold"><span class="headline align-self-end" style="color: #DA7967">2</span> of 3</p>
+        <v-btn depressed disabled block>Scanning...</v-btn>
     </v-card>
 </template>
 
