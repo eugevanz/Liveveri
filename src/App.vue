@@ -1,20 +1,18 @@
 <template>
-    <v-app>
+<v-app>
 
-        <v-main>
-            <liveness-v></liveness-v>
-        </v-main>
+    <v-main>
+        <!-- <liveness-v></liveness-v> -->
+        <router-view/>
+    </v-main>
 
-    </v-app>
+</v-app>
+  <!-- <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
+    <router-view/>
+  </div> -->
 </template>
 
-<script>
-// import Vue from 'vue'
-import LivenessV from './views/LivenessV.vue'
-export default {
-    components: { LivenessV },
-    // mounted() {
-    //     Vue.Main();
-    // }
-}
-</script>
