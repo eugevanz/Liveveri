@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "facefilter": "^2.0.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.2.11",
-    "facefilter": "^2.0.4"
+    "vue-router": "^3.4.9",
+    "vuetify": "^2.2.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

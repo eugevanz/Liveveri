@@ -163,7 +163,7 @@ export default {
                     
                 this._isFaceReal = false;
                 this._numRealDetects = 0;
-                this.refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
+                // this.refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
             }, this.TIME_FOR_FACE_TO_STAY_REAL);
         },
         CaptureLeftRightImages(leftRightAngle, upDownAngle, left, top, width, height) {
@@ -325,17 +325,16 @@ export default {
         this._rxAngle = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),
         this.faceFilter();
 
-        var video = this.$refs.idCapturePreview;
+        // var video = this.$refs.idCapturePreview;
         // Get access to the camera
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(
-                function(stream) {
-                    video.facingMode = "environment";
-                    video.srcObject = stream;
-                    // video.play();
-                }
-            ).catch(function(err) { alert(err); });
-        }
+        // if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        //     navigator.mediaDevices.getUserMedia({ video: true }).then(
+        //         function(stream) {
+        //             video.facingMode = "environment";
+        //             video.srcObject = stream;
+        //         }
+        //     ).catch(function(err) { alert(err); });
+        // }
     }
 }
 </script>

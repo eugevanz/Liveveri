@@ -3,7 +3,7 @@
         <p class="headline ma-1 mt-4">Scan document</p>
         <p class="font-weight-bold text-center" style="color: gray">Position your document with the picture-side-up and click the "Capture" button</p>
 
-        <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay width="288"></video>
+        <video id="idCapturePreview" ref="idCapturePreview" autoplay width="288"></video>
         <!-- <v-img :src="captured"></v-img> -->
 
         <v-row>
