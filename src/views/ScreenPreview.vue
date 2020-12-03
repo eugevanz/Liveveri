@@ -1,13 +1,24 @@
 <template>
-    <v-card id="enclosingCol" flat class="mx-auto my-12 d-flex flex-column align-center" max-width="288">
-        <p class="headline ma-1 mt-4">Liveness check</p>
-        <p id="FaceWidthOutput" ref="FaceWidthOutput" class="font-weight-bold text-center" style="color: gray">Please move your head around a bit... Left-to-right, Up-and-down</p>
+    <v-card id="enclosingCol" flat class="mx-auto my-5" max-width="288" height="100%">
+        <v-row class="text-center">
+            <v-col cols="12">
+                <p class="headline ma-1 mt-4 font-weight-bold">Liveness check</p>
+                <p id="FaceWidthOutput" ref="FaceWidthOutput" class="font-weight-bold text-center" style="color: gray">Please move your head around a bit... Left-to-right, Up-and-down</p>
+            </v-col>
+            <v-col cols="12">
+                <canvas id="jeeFaceFilterCanvas" width="288" height="216" ref="jeeFaceFilterCanvas"/>
+            </v-col>
+            <v-col cols="12" style="position: fixed; bottom: 0; width: 312px">
+                <p class="font-weight-bold"><span class="align-self-end" style="color: #DA7967; font-size: 22px">2</span> of 3</p>
+                <v-btn depressed disabled block>Scanning...</v-btn>
+            </v-col>
+        </v-row>
+        
 
         <!-- <video id="idCapturePreview" ref="idCapturePreview" playsinline autoplay style="display: none;"></video> -->
-        <canvas id="jeeFaceFilterCanvas" width="288" height="216" ref="jeeFaceFilterCanvas"/>
+        
 
-        <p class="font-weight-bold"><span class="headline align-self-end" style="color: #DA7967">2</span> of 3</p>
-        <v-btn depressed disabled block>Scanning...</v-btn>
+        
     </v-card>
 </template>
 
@@ -142,7 +153,7 @@ export default {
         },
         CheckForRealness() {
             var angleChangeLeftRight = Math.abs(Math.round(this._ryAngle.GetIndexOfDispersion() * 10000));
-            console.log(this._numRealDetects, this._isFaceReal);
+            // console.log(this._numRealDetects, this._isFaceReal);
             if (angleChangeLeftRight > this.MAX_ANGLE_FACE_LEFTRIGHT) this._numRealDetects++;
             var angleChangeTopBottom = Math.abs(Math.round(this._rxAngle.GetIndexOfDispersion() * 10000));
 
@@ -151,7 +162,7 @@ export default {
             if (this._numRealDetects > this.NUM_DETECTS_FOR_REAL_FACE) {
                 //$("#FaceWidthOutput").text("Face Is Real");
                 this._isFaceReal = true;
-                this.next(5);
+                this.next('third-party-source');
             }
 
             // Set the timeout
@@ -267,7 +278,7 @@ export default {
                     
                     // Is there no face?
                     if (detectState.detected <= _this.DETECT_THRESHOLD) {
-                        _this.$refs.FaceWidthOutput.text = "I don't see a face; please center yourself in the viewfinder";
+                        _this.$refs.FaceWidthOutput.value = "I don't see a face; please center yourself in the viewfinder";
                         _this.ResetFacesDetected();
                         return;
                     }
@@ -314,10 +325,7 @@ export default {
     mounted() {
         this.onResize();
 
-        var c = document.getElementById("jeeFaceFilterCanvas");
-        // c.width = 640;
-        // c.height = 480;
-        // var ctx = c.getContext("2d");  
+        var c = document.getElementById("jeeFaceFilterCanvas"); 
         this.vueCanvas = c;
 
         this._faceWidthToHeightRatio = new RunningAverageDoubleClass(this.RUNNING_AVERAGES),

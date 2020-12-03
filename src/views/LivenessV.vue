@@ -109,7 +109,9 @@ export default {
             valid: 'jhgvghhjsknflfvbhj',
             errorModal: false,
             currentStep: 1,
-            dialog: false
+            dialog: false,
+            _visionWrapper: null,
+            _tempToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL21pbnRpaXZpc2lvbnNlcnZpY2UuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpL2lkZW50aWZ5L2NsYWltcy90ZW5hbnQiOiJWaXNpb25WZXJpZnkuYWkiLCJodHRwczovL21pbnRpaXZpc2lvbnNlcnZpY2UuYXp1cmV3ZWJzaXRlcy5uZXQvYXBpL2lkZW50aWZ5L2NsYWltcy90ZW5hbnRfdG9rZW4iOiJ7XHJcbiAgXCJkZXZpY2VOYW1lXCI6IFwicG93ZXJhcHBzXCIsXHJcbiAgXCJ0ZW5hbnROYW1lXCI6IFwiVmlzaW9uVmVyaWZ5LmFpXCIsXHJcbiAgXCJ1c2VyXCI6IG51bGwsXHJcbiAgXCJzdWJUZW5hbnRcIjogbnVsbCxcclxuICBcImFwaVZlcnNpb25cIjogbnVsbFxyXG59IiwibmJmIjoxNjAxOTEwNzM4LCJleHAiOjE2MDE5OTcxMzgsImlhdCI6MTYwMTkxMDczOCwiaXNzIjoiaHR0cHM6Ly9taW50aWl2aXNpb25zZXJ2aWNlLmF6dXJld2Vic2l0ZXMubmV0LyJ9.H8HEp-3otGupjaxHP1YuatEDtQPcJgyl4TQE8CQfFsA",
         }
     },
     methods: {
